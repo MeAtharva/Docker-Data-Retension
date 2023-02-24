@@ -1,0 +1,31 @@
+# To start both nodejs and mongodb simultaneously
+
+version: '3.9'
+
+# Services to start
+services:
+  # MongoDB
+  mongo_db: 
+    container_name: mongo_container
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+
+    
+  api: 
+    container_name: api_container
+    build: .
+    ports: 
+      - 4000:3000
+    environment:
+      PORT: 3000
+      MONGODB_URL: mongodb://mongo_db:27017
+    depends_on:
+      - mongo_db
+    volumes:
+      - .:/usr/src/app
+
+volumes:
+  mongo_db: {}
+  api: {}
